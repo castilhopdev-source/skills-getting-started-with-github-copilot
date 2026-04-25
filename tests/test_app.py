@@ -19,8 +19,10 @@ def teardown_function(function):
 
 
 def test_get_activities_returns_known_activity():
+    # Arrange
+    # Act
     response = client.get("/activities")
-
+    # Assert
     assert response.status_code == 200
     activities = response.json()
     assert "Chess Club" in activities
@@ -29,12 +31,14 @@ def test_get_activities_returns_known_activity():
 
 
 def test_signup_adds_participant():
+    # Arrange
     email = "newstudent@mergington.edu"
+    # Act
     response = client.post(
         "/activities/Chess%20Club/signup",
         params={"email": email},
     )
-
+    # Assert
     assert response.status_code == 200
     assert response.json()["message"] == f"Signed up {email} for Chess Club"
 
@@ -43,23 +47,27 @@ def test_signup_adds_participant():
 
 
 def test_duplicate_signup_returns_400():
+    # Arrange
     email = "michael@mergington.edu"
+    # Act
     response = client.post(
         "/activities/Chess%20Club/signup",
         params={"email": email},
     )
-
+    # Assert
     assert response.status_code == 400
     assert response.json()["detail"] == "Already signed up"
 
 
 def test_remove_participant():
+    # Arrange
     email = "daniel@mergington.edu"
+    # Act
     response = client.delete(
         "/activities/Chess%20Club/participants",
         params={"email": email},
     )
-
+    # Assert
     assert response.status_code == 200
     assert response.json()["message"] == f"Removed {email} from Chess Club"
 
@@ -68,11 +76,13 @@ def test_remove_participant():
 
 
 def test_remove_missing_participant_returns_404():
+    # Arrange
     email = "missing@mergington.edu"
+    # Act
     response = client.delete(
         "/activities/Chess%20Club/participants",
         params={"email": email},
     )
-
+    # Assert
     assert response.status_code == 404
     assert response.json()["detail"] == "Participant not found"
